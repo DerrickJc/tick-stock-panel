@@ -42,20 +42,21 @@
     <td width="50%"><img src="./docs/screenshots/screener.png" alt="策略页" title="策略页"></td>
   </tr>
   <tr>
-    <td width="50%" align="center"><b>监控中心 Monitor</b></td>
-    <td width="50%" align="center"><b>概念分析 Concept</b></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="./docs/screenshots/monitor.png" alt="监控中心" title="监控中心"></td>
-    <td width="50%"><img src="./docs/screenshots/concept-analysis.png" alt="概念分析" title="概念分析"></td>
-  </tr>
-  <tr>
     <td width="50%" align="center"><b>回测 Backtest</b></td>
-    <td width="50%" align="center"><b>连板梯队 Limit Ladder</b></td>
+    <td width="50%" align="center"><b>监控中心 Monitor</b></td>
   </tr>
   <tr>
     <td width="50%"><img src="./docs/screenshots/backtest.png" alt="回测页" title="回测页"></td>
+    <td width="50%"><img src="./docs/screenshots/monitor.png" alt="监控中心" title="监控中心"></td>
+    
+  </tr>
+  <tr>
+    <td width="50%" align="center"><b>连板梯队 Limit Ladder</b></td>
+    <td width="50%" align="center"><b>概念分析 Concept</b></td>    
+  </tr>
+  <tr>
     <td width="50%"><img src="./docs/screenshots/limit-ladder.png" alt="连板梯队页" title="连板梯队页"></td>
+    <td width="50%"><img src="./docs/screenshots/concept-analysis.png" alt="概念分析" title="概念分析"></td>
   </tr>
 </table>
 
