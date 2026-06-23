@@ -17,6 +17,8 @@
 
 </div>
 
+> **说明**:目前项目基于[TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA)数据源。自有数据源需二次开发修改字段映射即可;后续需求人多的话可能会实现切换数据源功能.
+
 ---
 
 ## 🎯 项目定位
