@@ -172,7 +172,24 @@ docker compose up --build
 # 打开 http://localhost:3018
 ```
 
-### 方式 B:Dev 模式(二次开发)
+### 方式 B:桌面客户端(免环境,开箱即用)
+
+下载对应平台的安装包,解压后双击运行即可,**无需 Python / Node 环境**。
+
+| 平台 | 文件 |
+| :--- | :--- |
+| **Windows** | `TickFlowStockPanel-win-x64.zip` → 解压后运行 `TickFlowStockPanel.exe` |
+| **macOS** | `TickFlowStockPanel-macos.zip` → 解压后运行 app(首次打开右键→打开,绕过 Gatekeeper) |
+| **Linux** | `TickFlowStockPanel-linux-x64.tar.gz` → 解压后运行可执行文件 |
+
+下载地址:**[GitHub Releases](https://github.com/shy3130/tickflow-stock-panel/releases/latest)**
+
+> - 桌面版数据存储在用户目录(Windows `%APPDATA%`、macOS `~/Library/Application Support`、Linux `~/.local/share`),卸载重装数据不丢失。
+> - 桌面版**不含 vectorbt 回测引擎**(为控制体积);纯 Polars 回测引擎照常可用。
+> - 支持系统通知:在「设置 → 实时监控 → 系统通知」开启,监控告警会推送到操作系统通知中心。
+> - 版本更新:在「设置 → 系统设置 → 关于」点「检查更新」跳转 Release 页下载新版。
+
+### 方式 C:Dev 模式(二次开发)
 
 ```bash
 cp .env.example .env       # 填 TICKFLOW_API_KEY,留空则启用 Free 试用
