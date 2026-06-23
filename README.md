@@ -323,3 +323,7 @@ cd ../frontend && pnpm install && pnpm dev
 [MIT](./LICENSE) © tickflow-stock-panel contributors
 
 本项目依赖 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 提供数据服务,使用前请遵守其服务条款。
+
+## 社区
+
+本开源项目已链接并认可 [LINUX DO 社区](https://linux.do)。
