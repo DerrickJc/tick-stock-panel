@@ -174,11 +174,11 @@ docker compose up --build
 
 ### 方式 B:桌面客户端(免环境,开箱即用)
 
-下载对应平台的安装包,解压后双击运行即可,**无需 Python / Node 环境**。
+下载对应平台的安装包,运行后按向导安装即可,**无需 Python / Node 环境**。
 
 | 平台 | 文件 |
 | :--- | :--- |
-| **Windows** | `TickFlowStockPanel-win-x64.zip` → 解压后运行 `TickFlowStockPanel.exe` |
+| **Windows** | `TickFlowStockPanel-Setup-x64.exe` → 双击安装向导,自动创建桌面/开始菜单快捷方式 |
 | **macOS** | `TickFlowStockPanel-macos.zip` → 解压后运行 app(首次打开右键→打开,绕过 Gatekeeper) |
 | **Linux** | `TickFlowStockPanel-linux-x64.tar.gz` → 解压后运行可执行文件 |
 
