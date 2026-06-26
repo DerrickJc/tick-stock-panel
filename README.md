@@ -198,6 +198,7 @@ docker compose up --build
 
 ```ini
 BACKEND_EXTRAS=legacy-cpu
+# 需要回测可同时启用(空格分隔):BACKEND_EXTRAS=legacy-cpu backtest
 ```
 
 ```bash
@@ -205,7 +206,7 @@ docker compose up --build
 ```
 
 `legacy-cpu` 会让后端安装 `polars[rtcompat]`,适用于不支持 AVX2/FMA 的老 CPU;
-默认留空则保持 Polars 高性能运行时。
+默认留空则保持 Polars 高性能运行时。该 wheel 约 50MB,启用后镜像体积会相应增大。
 
 
 首次运行会自动安装前后端依赖(约 1-2 分钟),之后直接启动:
