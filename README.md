@@ -9,6 +9,7 @@
 [![React](https://img.shields.io/badge/React-18-61dafb.svg)](https://react.dev/)
 [![Data: TickFlow](https://img.shields.io/badge/Data-TickFlow-00b386.svg)](https://tickflow.org/auth/register?ref=V3KDKGXPEA)
 [![Deploy: Docker](https://img.shields.io/badge/Deploy-Docker-2496ed.svg)](./Dockerfile)
+[![GitHub stars](https://img.shields.io/github/stars/shy3130/tickflow-stock-panel?style=social)](https://github.com/shy3130/tickflow-stock-panel/stargazers)
 
 基于 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 数据 · 🚀 **开箱即用**(单容器 / Free 模式)
 能力驱动,适配 Free → Expert 全档位订阅 · 🔌 **自由接入第三方扩展数据**(例如 Tushare、自有量化项目数据)
