@@ -28,7 +28,7 @@
 ## 🎯 项目定位
 
 让任何**个人散户 / 量化爱好者**,**零运维**地拥有一套**与自己订阅档位严格匹配**的 A 股分析、选股、监控工作台。  
-基于 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) Key **低成本**获取数据。**填写邀请码 `V3KDKGXPEA` 免费领取概念行业等扩展数据**。<br>
+基于 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) Key **低成本**获取数据。<br>
 **任意接入第三方数据**(Tushare 等),页面可视化自定义配置扩展数据表。
 
 **项目所需配置**:
