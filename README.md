@@ -4,12 +4,18 @@
 
 **自托管、零运维的 A 股「选股 + 监控 + 回测」量化工作台**
 
+**面向个人散户与量化爱好者而生**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/Python-≥3.11-blue.svg)](https://www.python.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb.svg)](https://react.dev/)
 [![Data: TickFlow](https://img.shields.io/badge/Data-TickFlow-00b386.svg)](https://tickflow.org/auth/register?ref=V3KDKGXPEA)
 [![Deploy: Docker](https://img.shields.io/badge/Deploy-Docker-2496ed.svg)](./Dockerfile)
 [![GitHub stars](https://img.shields.io/github/stars/shy3130/tickflow-stock-panel?style=social)](https://github.com/shy3130/tickflow-stock-panel/stargazers)
+
+</div>
+
+<div align="center">
 
 **[快速开始](#-快速开始)** · **[核心功能](#-核心功能)** · **[配置](#️-配置)** · **[路线图](#-路线图)**
 
@@ -25,6 +31,12 @@
 > 基于 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 数据源。**明确不做**:不对标同花顺 / 通达信,不内置「AI 荐股 / 涨停预测」。
 
 觉得有用可以点个 Star，蟹蟹 🌹
+
+---
+
+## 🎯 项目定位
+
+**面向个人散户与量化爱好者的 A 股分析工作台**,聚焦「**选股 + 监控 + 回测**」三大场景,LLM能力驱动进行市场分析，掌控市场节奏；让普通投资者也能拥有一套可自定义策略的量化工具。
 
 ---
 
