@@ -111,7 +111,7 @@ docker compose up --build
 <details>
 <summary><b>环境适配与高级选项(老 CPU · 手动启动 · 回测依赖)</b></summary>
 
-**老 CPU 兼容(avx2/fma 缺失报错或 exit 132)**:在 `.env` 打开 `BACKEND_EXTRAS=legacy-cpu` 后重建,会给 Polars 切到 `rtcompat` 运行时;需回测则 `BACKEND_EXTRAS=legacy-cpu backtest`。
+**老 CPU 兼容(avx2/fma 缺失报错或 exit 132)**:桌面客户端安装包已内置兼容内核(新老 CPU 通吃)。Docker / 源码用户在 `.env` 打开 `BACKEND_EXTRAS=legacy-cpu` 后重建,会给 Polars 切到 `rtcompat` 运行时;需回测则 `BACKEND_EXTRAS=legacy-cpu backtest`。
 
 **手动分别启动:**
 
