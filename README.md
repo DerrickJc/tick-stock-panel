@@ -5,7 +5,7 @@
 
 [![声明:个人开源](https://img.shields.io/badge/⚠️_声明-个人开源_非_TickFlow_官方项目-green?style=for-the-badge&labelColor=red)](https://github.com/shy3130/tickflow-stock-panel)
 
-**本开源项目，非 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 官方项目。** 仅供学习研究使用，与 TickFlow 官方无任何隶属或合作关系。
+**本项目个人开源，非 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 官方项目。** 仅供学习研究使用，与 TickFlow 官方无任何隶属或合作关系。
 
 
 
