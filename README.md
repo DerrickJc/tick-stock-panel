@@ -32,9 +32,12 @@
 
  基于 [TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 数据源。**明确不做**:不对标同花顺 / 通达信,不内置「AI 荐股 / 涨停预测」。
 
-> ⚠️ 考虑到tickflow数据源没有人气/资金流向等个性化数据,我将开放自有的第三方数据以供大佬们研究使用,包括但不限于当前内置的ths概念/ths行业(后续更新在这里)
+> ⚠️ 此项目非[TickFlow](https://tickflow.org/auth/register?ref=V3KDKGXPEA) 官方项目,属于个人开源项目.
 
  
+> ⚠️ 考虑到tickflow数据源没有人气/资金流向等个性化数据,我将开放自有的第三方数据以供大佬们研究使用,包括但不限于当前内置的ths概念/ths行业(后续更新在这里)
+
+
 > 有更多稳定免费数据源推荐,或者提交建议/意见的大佬可以邮件到 415333856@qq.com,q群 109338242
 
 
