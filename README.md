@@ -311,8 +311,9 @@ DATA_DIR=./data       # Parquet / DuckDB 数据存储目录
 
 ## 📚 文档与贡献
 
-- [docs/strategy-guide.md](./docs/strategy-guide.md) —— 策略开发指南(AI 生成与手写规范)
-- [docs/](./docs) —— 策略构建步骤、示例
+- [backend/app/strategy/prompts/strategy-guide.md](./backend/app/strategy/prompts/strategy-guide.md) —— 策略开发指南(AI 生成与手写规范)
+- [backend/app/strategy/prompts/](./backend/app/strategy/prompts) —— 策略构建步骤、示例
+- [docs/deploy-password.md](./docs/deploy-password.md) —— 部署与密码配置说明
 
 欢迎 Issue 和 PR。新增内置策略:在 `backend/app/strategy/builtin/` 参照现有文件实现 `StrategyDef`,引擎自动发现。
 
