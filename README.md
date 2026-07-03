@@ -40,6 +40,22 @@
 
 ---
 
+## ✨ 核心功能
+
+| 模块             | 一句话                                                                 | 详见                              |
+| :--------------- | :--------------------------------------------------------------------- | :-------------------------------- |
+| 🔍 **选股引擎**   | 18 个内置策略 + 自定义信号 + AI 生成 + 代码迁移,Polars 毫秒级扫全 A 股 | [strategy.md](./docs/strategy.md) |
+| 📊 **指标流水线** | MA/EMA/MACD/RSI/KDJ/布林/量比等,一次扫表落盘 enriched Parquet          | [features.md](./docs/features.md) |
+| 🧪 **回测引擎**   | 三种模式(个股/策略组合/自由信号),T+1/手续费/滑点/止损,SSE 流式进度     | [features.md](./docs/features.md) |
+| 📡 **监控中心**   | 四类监控(策略/个股信号/价格/异动),多条件 AND/OR + 飞书推送             | [features.md](./docs/features.md) |
+| 📈 **个股分析**   | 9 类关键价位 + AI 四维分析(技术/基本面/财务/消息面)                    | [features.md](./docs/features.md) |
+| 🏆 **连板梯队**   | 连板层级统计 + 概念涨幅轮动 + 盘后 AI 复盘 + 炸板/翘板预警             | [features.md](./docs/features.md) |
+| 🧰 **数据扩展**   | TickFlow 多源 + 第三方接入(接口/推送/CSV/JSON)同台分析                   | [features.md](./docs/features.md) |
+
+
+
+
+
 <details>
 <summary><b>📦 主要页面与功能</b></summary>
 
@@ -74,7 +90,6 @@
 
 
 ---
-
 
 ## 📸 界面预览
 
@@ -114,20 +129,8 @@
 
 ---
 
-## ✨ 核心功能
-
-| 模块             | 一句话                                                                 | 详见                              |
-| :--------------- | :--------------------------------------------------------------------- | :-------------------------------- |
-| 🔍 **选股引擎**   | 18 个内置策略 + 自定义信号 + AI 生成 + 代码迁移,Polars 毫秒级扫全 A 股 | [strategy.md](./docs/strategy.md) |
-| 📊 **指标流水线** | MA/EMA/MACD/RSI/KDJ/布林/量比等,一次扫表落盘 enriched Parquet          | [features.md](./docs/features.md) |
-| 🧪 **回测引擎**   | 三种模式(个股/策略组合/自由信号),T+1/手续费/滑点/止损,SSE 流式进度     | [features.md](./docs/features.md) |
-| 📡 **监控中心**   | 四类监控(策略/个股信号/价格/异动),多条件 AND/OR + 飞书推送             | [features.md](./docs/features.md) |
-| 📈 **个股分析**   | 9 类关键价位 + AI 四维分析(技术/基本面/财务/消息面)                    | [features.md](./docs/features.md) |
-| 🏆 **连板梯队**   | 连板层级统计 + 概念涨幅轮动 + 盘后 AI 复盘 + 炸板/翘板预警             | [features.md](./docs/features.md) |
-| 🧰 **数据扩展**   | TickFlow 多源 + 第三方接入(Tushare/CSV/JSON)同台分析                   | [features.md](./docs/features.md) |
 
 
----
 
 ## 🚀 快速开始
 
