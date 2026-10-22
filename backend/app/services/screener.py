@@ -46,7 +46,9 @@ def enriched_history_days(data_dir, asset_type: str = "stock", as_of: date | Non
 
 # ── 进程级历史数据缓存 (避免 run_all 每次重新扫描 parquet + 计算指标) ──
 _history_cache: dict[tuple[str, date, int], tuple[float, pl.DataFrame]] = {}
-_HISTORY_CACHE_TTL = 120.0  # 秒
+# TTL 与「盘后预热 + 页面只补缺失」节奏对齐: 覆盖数据落地到用户查看的典型窗口,
+# 同窗口内补跑缺失策略不再重付指标冷启动 (~5s)。
+_HISTORY_CACHE_TTL = 600.0  # 秒
 
 # load_prior_consecutive 最多回看多少个已存在的日分区 (缺列时继续往前找的上限)
 _PRIOR_PARTITION_SCAN = 10

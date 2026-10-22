@@ -17,8 +17,9 @@ from pydantic import BaseModel
 
 from app.config import settings
 from app.db_safe import is_valid_ext_ident, quote_ident
-from app.services import strategy_cache, strategy_run_queue
+from app.services import strategy_cache, strategy_prewarm, strategy_run_queue
 from app.services.screener import ScreenerService
+from app.services.strategy_prewarm import coverage_warnings as _coverage_warnings
 from app.strategy import config as strategy_config
 
 logger = logging.getLogger(__name__)
@@ -54,27 +55,6 @@ def _safe(result_dict: dict) -> dict:
                 r[k] = None
     return result_dict
 
-
-def _coverage_warnings(
-    svc, as_of, *, engine=None, strategy_ids=None, params_map=None, overrides_map=None,
-) -> list[str]:
-    """数据充足性提示 (#303): enriched 覆盖低于暖机需求时给出人话警告。
-
-    advisory 元数据: 任何计算失败都静默返回 [], 绝不影响策略主流程。
-    引擎/服务无该方法时 (测试 Fake) 同样跳过, 与 build_shared_matrix 的
-    可选能力探测同风格。
-    """
-    try:
-        required: int | None = None
-        rhb = getattr(engine, "required_history_bars", None)
-        if engine is not None and strategy_ids and callable(rhb):
-            required = rhb(strategy_ids, params_map=params_map, overrides_map=overrides_map)
-        cw = getattr(svc, "coverage_warnings", None)
-        if callable(cw):
-            return cw(as_of, required_bars=required)
-    except Exception:
-        logger.debug("coverage warnings unavailable", exc_info=True)
-    return []
 
 
 def _one_word_limit_expr(status_main: str, columns: list[str]) -> Any:
@@ -607,126 +587,6 @@ def market_snapshot(request: Request):
     return {"as_of": str(as_of), "rows": rows}
 
 
-def _run_all_progressive(
-    *,
-    repo,
-    engine,
-    svc: ScreenerService,
-    as_of,
-    asset_type: str,
-    timeframe: str,
-    all_ids: list[str],
-    params_map: dict,
-    overrides_map: dict,
-    first_return_s: float,
-    t_total: float,
-) -> dict:
-    """run_all 渐进式执行: 快策略随响应先返回, 慢策略后台算完逐个落缓存。
-
-    执行全程在单飞执行器里 (见 services/strategy_run_queue.py): 相同请求
-    搭车现有执行, 不同请求排队; HTTP 侧只轮询状态快照到首返时限。
-    """
-    data_dir = repo.store.data_dir
-    key = (asset_type, timeframe, str(as_of), tuple(sorted(all_ids)))
-    ordered_ids = strategy_run_queue.order_strategy_ids(
-        all_ids, strategy_run_queue.load_run_timings(data_dir)
-    )
-
-    def job(handle: strategy_run_queue.StrategyRunHandle) -> None:
-        context = svc.build_strategy_context(
-            engine,
-            as_of,
-            ordered_ids,
-            timeframe=timeframe,
-            params_map=params_map,
-            overrides_map=overrides_map,
-        )
-        # 逐策略 run_all 不会把矩阵回写 context.market → 每个矩阵策略都会重建
-        # 全市场矩阵 (小服务器上单次数秒到十余秒)。这里按字段并集一次建好复用;
-        # FakeEngine 等无该方法的实现跳过 (保持旧行为)。
-        if getattr(context, "market", None) is None:
-            build_matrix = getattr(engine, "build_shared_matrix", None)
-            if callable(build_matrix):
-                matrix = build_matrix(
-                    context,
-                    [(sid, engine.get(sid)) for sid in ordered_ids],
-                    params_map,
-                    overrides_map,
-                )
-                if matrix is not None:
-                    context = replace(context, market=matrix)
-        all_results: dict[str, dict] = {}
-        elapsed_map: dict[str, float] = {}
-        for sid in ordered_ids:
-            t0 = time.perf_counter()
-            # 逐策略隔离: 单个策略崩溃 (如自定义代码的数据类型错误) 只记
-            # 错误跳过, 不让整批剩余策略陪葬 — 其余策略照常算完落缓存。
-            try:
-                single = engine.run_all(
-                    context,
-                    params_map=params_map,
-                    overrides_map=overrides_map,
-                    strategy_ids=[sid],
-                    parallel=False,
-                )
-                result = single[sid]
-            except Exception as e:
-                logger.warning("run_all: 策略 %s 执行失败, 跳过: %s", sid, e, exc_info=True)
-                handle.fail_one(sid, str(e))
-                continue
-            payload = {
-                "total": result.total,
-                "as_of": str(as_of),
-                "rows": _safe(asdict(result)).get("rows", []),
-                "computed_at": int(time.time() * 1000),
-            }
-            if timeframe == "1d":
-                w = _coverage_warnings(
-                    svc, as_of, engine=engine, strategy_ids=[sid],
-                    params_map=params_map, overrides_map=overrides_map,
-                )
-                if w:
-                    payload["warnings"] = w
-            all_results[sid] = payload
-            elapsed_map[sid] = (time.perf_counter() - t0) * 1000
-            # 逐策略增量落盘 (write_cache 同日按 sid 合并), 前端轮询即可逐个看到
-            try:
-                strategy_cache.write_cache(data_dir, str(as_of), {sid: payload})
-            except Exception:
-                logger.warning("run_all 渐进写入缓存失败: %s", sid, exc_info=True)
-            handle.complete(sid, {k: v for k, v in payload.items() if k != "rows"})
-        # 收尾: 与旧版口径一致的整体重写 + 耗时落盘供下次排序
-        if all_results:
-            with contextlib.suppress(Exception):
-                strategy_cache.write_cache(data_dir, str(as_of), all_results)
-        strategy_run_queue.record_run_timings(data_dir, elapsed_map)
-
-    handle = strategy_run_queue.MANAGER.get_or_submit(key, ordered_ids, job)
-    deadline = time.perf_counter() + first_return_s
-    snap = handle.snapshot()
-    while not snap["done"] and time.perf_counter() < deadline:
-        time.sleep(0.2)
-        snap = handle.snapshot()
-
-    done_results = snap["results"]
-    if snap["error"] and not done_results:
-        raise HTTPException(status_code=500, detail=snap["error"])
-    logger.info(
-        "run_all: first return %.1fms (%d done, %d pending)",
-        (time.perf_counter() - t_total) * 1000,
-        len(done_results),
-        len(snap["pending"]),
-    )
-    return {
-        "as_of": str(as_of),
-        "results": done_results,
-        "pending": snap["pending"],
-        "errors": snap["errors"],
-        "complete": snap["done"] and not snap["error"],
-        "error": snap["error"],
-        "started_at": snap["started_at_ms"],
-    }
-
 
 @router.post("/run_all")
 def run_all(request: Request, body: Optional[dict] = None):
@@ -809,7 +669,7 @@ def run_all(request: Request, body: Optional[dict] = None):
     # 仅日线 + summary_only (策略页卡片) 启用; 分钟/明细请求保持整段阻塞。
     first_return_s = settings.strategy_run_all_first_return_s
     if body.get("summary_only") and timeframe == "1d" and first_return_s > 0:
-        progressive = _run_all_progressive(
+        progressive = strategy_prewarm.run_all_progressive(
             repo=repo,
             engine=engine,
             svc=svc,

@@ -368,9 +368,20 @@ async def _application_lifespan(app: FastAPI):
         if not matrix_prewarm_owner.schedule(_prewarm):
             logger.info("matrix cache prewarm already running or shutting down, skip")
 
-    repo._on_refresh_done = _schedule_matrix_cache_prewarm  # noqa: SLF001
+    # 策略缓存预热链在同一回调上: 手动/定时管道完成、启动后台预热完成都会触发,
+    # 数据落地后即算满当日策略缓存, 策略页打开秒出 (needs_prewarm 内部判重)。
+    _matrix_prewarm_callback = _schedule_matrix_cache_prewarm
+
+    def _on_refresh_done_with_strategy_prewarm() -> None:
+        if _matrix_prewarm_callback is not None:
+            _matrix_prewarm_callback()
+        from app.services.strategy_prewarm import schedule_prewarm
+
+        schedule_prewarm(app)
+
+    repo._on_refresh_done = _on_refresh_done_with_strategy_prewarm  # noqa: SLF001
     if repo.enriched_ready:
-        _schedule_matrix_cache_prewarm()
+        _on_refresh_done_with_strategy_prewarm()
 
     # 通用监控规则引擎: 启动时 reload 规则到内存态 (修复重启后告警失效)
     from app.services import preferences

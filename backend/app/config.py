@@ -151,6 +151,10 @@ class Settings(BaseSettings):
     # 前端轮询 cached-summary 点亮卡片。0 = 关闭 (整段阻塞, 旧行为)。
     strategy_run_all_first_return_s: float = 15.0
 
+    # 盘后策略缓存预热: 数据落地 (定时管道/手动同步/启动预热完成) 后自动算满
+    # 当日策略缓存, 策略页打开即读缓存秒出。关闭后回到「页面打开补算缺失」旧行为。
+    strategy_prewarm_enabled: bool = True
+
     # Auth — 首次启动时预置访问密码(明文, 仅用于初始化, 详见 services/auth.bootstrap_from_env)
     # 公网服务器部署时免去 SSH 端口转发设密码的麻烦。写入 auth.json(哈希)后即不再读取。
     auth_password: str = ""
