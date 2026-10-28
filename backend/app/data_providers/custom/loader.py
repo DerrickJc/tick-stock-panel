@@ -91,12 +91,14 @@ def _publish_scan(
     providers: dict[str, GenericHTTPProvider],
     load_errors: list[dict],
     summary: dict,
-) -> None:
+) -> list[GenericHTTPProvider]:
     global _PROVIDERS, _LOAD_ERRORS, _SCAN_SUMMARY
     with _PUBLISH_LOCK:
+        previous = list(_PROVIDERS.values())
         _PROVIDERS = providers
         _LOAD_ERRORS = load_errors
         _SCAN_SUMMARY = summary
+    return previous
 
 
 def _close_providers(providers: list[GenericHTTPProvider]) -> None:
@@ -159,8 +161,7 @@ def load_all(path: Path | None = None) -> None:
 
     # 先换上新快照再关旧客户端。close() 抛错时新扫描已经可见，
     # 不会留下半关闭的旧表，也不会丢掉这次扫到的源。
-    previous = list(_PROVIDERS.values())
-    _publish_scan(new_providers, new_errors, {
+    previous = _publish_scan(new_providers, new_errors, {
         "config_dir": str(base),
         "found": len(files),
         "loaded": loaded,

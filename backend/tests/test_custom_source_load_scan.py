@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -180,3 +181,38 @@ def test_reload_returns_scan_directory_and_counts(
     assert body["loaded"] == 1
     assert body["skipped"] == 0
     assert [item["name"] for item in body["custom"]] == ["ok_source"]
+
+
+def test_plugin_registered_before_publish_is_closed_outside_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    isolated_loader,
+) -> None:
+    (tmp_path / "ok.yaml").write_text(_OK_YAML, encoding="utf-8")
+    plugin = Mock()
+    close_observations = []
+
+    def close() -> None:
+        locked = loader._PUBLISH_LOCK.locked()
+        close_observations.append((
+            locked,
+            None if locked else [item["name"] for item in loader.list_sources()],
+        ))
+
+    plugin.close.side_effect = close
+    monkeypatch.setattr(loader, "_load_entry", lambda _entry: plugin)
+    publish_scan = loader._publish_scan
+
+    def register_then_publish(*args):
+        # 固定复现安装线程在扫描结束、发布加锁前完成注册的交错。
+        loader._register_one_plugin({"name": "late_plugin", "entry": "test:plugin"})
+        assert loader._PROVIDERS["late_plugin"] is plugin
+        return publish_scan(*args)
+
+    monkeypatch.setattr(loader, "_publish_scan", register_then_publish)
+    loader.load_all(tmp_path)
+
+    plugin.close.assert_called_once_with()
+    assert close_observations == [(False, ["ok_source"])]
+    assert "late_plugin" not in loader._PROVIDERS
+    assert loader.scan_summary()["loaded"] == 1
